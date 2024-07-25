@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('payments', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('transaction_id')->index();
-            $table->string('payment_invoice_id');
-            $table->timestamps();
+        Schema::table('results', function (Blueprint $table) {
+            $table->string('image_url')->after('success_response')->nullable();
         });
     }
 
@@ -24,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('payments');
+        Schema::table('results', function (Blueprint $table) {
+            $table->dropColumn('image_url');
+        });
     }
 };

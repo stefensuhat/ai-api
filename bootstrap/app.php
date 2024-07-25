@@ -10,17 +10,16 @@ use Illuminate\Support\Facades\Route;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->statefulApi();
         $middleware->api(prepend: [
             ForceJsonResponse::class,
             ConvertRequestToSnakeCase::class,
             ConvertResponseToCamelCase::class,
-            \Illuminate\Session\Middleware\StartSession::class,
-
         ]);
     })
     ->withRouting(
         using: function () {
-            Route::middleware('api')
+            Route::middleware(['api'])
                 ->group(base_path('routes/api.php'));
         },
         health: '/up',

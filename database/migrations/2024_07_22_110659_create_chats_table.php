@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('payments', function (Blueprint $table) {
+        Schema::create('chats', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('transaction_id')->index();
-            $table->string('payment_invoice_id');
+            $table->foreignUlid('user_id');
+            $table->foreignUlid('chat_group_id');
+            $table->string('role');
+            $table->json('content');
             $table->timestamps();
         });
     }
@@ -24,6 +26,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('payments');
+        Schema::table('chats', function (Blueprint $table) {
+            //
+        });
     }
 };

@@ -23,4 +23,9 @@ class Transaction extends Model
     {
         return $this->belongsTo(PricingPlan::class);
     }
+
+    public function payment()
+    {
+        return $this->hasOne(Payment::class);
+    }
 }
