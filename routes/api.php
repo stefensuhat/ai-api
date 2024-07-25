@@ -31,7 +31,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('transactions/{transaction}', [TransactionController::class, 'show']);
     Route::post('checkout', [TransactionController::class, 'store']);
 
-    Route::get('chat-groups', [ChatGroupController::class, 'index']);
+    Route::apiResource('conversations', ChatGroupController::class);
+    Route::apiResource('chats', ChatController::class);
+
     Route::get('chats', [ChatController::class, 'index']);
     Route::post('chat/save', [ChatController::class, 'store']);
 });

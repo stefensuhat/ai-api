@@ -14,12 +14,10 @@ class ChatController extends Controller
     public function index(Request $request): \Illuminate\Http\JsonResponse
     {
         $orderBy = $request->query('order_by');
+        $orderDir = $request->query('order_dir', 'desc');
         $count = $request->query('count', 100);
 
-        $chats = ChatGroup::latest('updated_at')
-            ->when($orderBy, function ($query) use ($orderBy) {
-                return $query->orderBy($orderBy, 'desc');
-            })
+        $chats = ChatGroup::when($orderBy, fn ($query) => $query->orderBy($orderBy, $orderDir))
             ->take($count)
             ->get();
 

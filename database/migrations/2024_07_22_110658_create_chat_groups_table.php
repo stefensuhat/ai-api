@@ -15,6 +15,7 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->foreignUlid('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('name');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
