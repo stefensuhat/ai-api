@@ -59,4 +59,14 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserToken::class, 'user_id', 'id');
     }
+
+    public function chatGroups(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(ChatGroup::class);
+    }
+
+    public function chats(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Chat::class);
+    }
 }

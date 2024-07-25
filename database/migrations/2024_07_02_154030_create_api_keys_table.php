@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('payments', function (Blueprint $table) {
+        Schema::create('api_keys', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('transaction_id')->index();
-            $table->string('payment_invoice_id');
+            $table->string('key');
+            $table->boolean('is_exceeded')->default(false);
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('payments');
+        Schema::dropIfExists('api_keys');
     }
 };
