@@ -60,7 +60,7 @@ class ImageController extends Controller
 
             $response = $replicate->json();
 
-            $result = new Result();
+            $result = new Result;
             $result->user_id = User::first()->id;
             $result->model_id = $getModel->id;
             $result->pending_response = $response;

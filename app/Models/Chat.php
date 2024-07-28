@@ -16,6 +16,10 @@ class Chat extends Model
 
     protected $fillable = ['role', 'content'];
 
+    protected $casts = [
+        'content' => 'json',
+    ];
+
     public function chatGroup(): BelongsTo
     {
         return $this->belongsTo(ChatGroup::class);

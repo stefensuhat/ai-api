@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ChatGroupResource extends JsonResource
+class ChatResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,10 +15,9 @@ class ChatGroupResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'last_updated_at' => $this->updated_at,
-            'chats' => ChatResource::collection($this->chats),
+            'role' => $this->role,
+            'content' => json_decode($this->content, true),
+            'created_at' => $this->created_at,
         ];
     }
 }

@@ -32,7 +32,7 @@ class DatabaseSeeder extends Seeder
         // $user->email_verified_at = now();
         // $user->save();
 
-        // $this->call(ChatSeeder::class);
+        $this->call(ChatSeeder::class);
         // $settings = [
         //     [
         //         'key' => 'aspectRatio',

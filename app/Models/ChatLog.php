@@ -11,7 +11,7 @@ class ChatLog extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['prompt', 'model', 'input_tokens', 'output_tokens', 'content'];
+    protected $fillable = ['model', 'input_tokens', 'output_tokens'];
 
     public function user(): BelongsTo
     {

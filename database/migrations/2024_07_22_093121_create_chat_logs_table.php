@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('chat_id');
             $table->foreignUlid('user_id');
-            $table->string('prompt')->nullable();
             $table->string('msg_id');
             $table->string('model');
-            $table->json('content');
+            $table->string('stop_reason');
+            $table->string('stop_sequence');
             $table->unsignedInteger('input_tokens');
             $table->unsignedInteger('output_tokens');
             $table->timestamps();

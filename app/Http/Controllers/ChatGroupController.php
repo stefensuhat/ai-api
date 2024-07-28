@@ -16,6 +16,15 @@ class ChatGroupController extends Controller
         return response()->json($collection);
     }
 
+    public function show($chatGroupId): \Illuminate\Http\JsonResponse
+    {
+        $chatGroup = ChatGroup::with('chats')->findOrFail($chatGroupId);
+
+        $chatGroupResource = new ChatGroupResource($chatGroup);
+
+        return response()->json($chatGroupResource);
+    }
+
     public function destroy($chatGroup): \Illuminate\Http\JsonResponse
     {
         $chatGroup = ChatGroup::findOrFail($chatGroup);

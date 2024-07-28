@@ -33,9 +33,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::apiResource('conversations', ChatGroupController::class);
     Route::apiResource('chats', ChatController::class);
-
-    Route::get('chats', [ChatController::class, 'index']);
-    Route::post('chat/save', [ChatController::class, 'store']);
 });
 
 // payment gateway callback

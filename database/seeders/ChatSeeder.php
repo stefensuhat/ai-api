@@ -7,6 +7,7 @@ use App\Models\ChatGroup;
 use App\Models\ChatLog;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class ChatSeeder extends Seeder
 {
@@ -15,45 +16,11 @@ class ChatSeeder extends Seeder
      */
     public function run(): void
     {
-        $data = [
-            [
-                'role' => 'user',
-                'content' => [
-                    [
-                        'type' => 'text',
-                        'text' => 'Hello World',
-                    ],
-                ],
-            ],
-            [
-                'role' => 'assistant',
-                'content' => [
-                    [
-                        'type' => 'text',
-                        'text' => "Hello! How can I assist you today? Is there anything specific you'd like to talk about or any questions you have?",
-                    ],
-                ],
-            ],
-            [
-                'role' => 'user',
-                'content' => [
-                    [
-                        'type' => 'text',
-                        'text' => 'Hello world 2',
-                    ],
-                ],
-            ],
-            [
-                'role' => 'assistant',
-                'content' => [
-                    [
-                        'type' => 'text',
-                        'text' => "Hello again! It seems you're repeating a common programming phrase. \"Hello, World!\" is often the first program people write when learning a new programming language. Is there something related to programming or computer science you'd like to discuss? Or perhaps you're just saying hello? Either way, I'm here to help if you have any questions or topics you'd like to explore.",
-                    ],
-                ],
-            ],
-        ];
-        $user = User::first();
+        DB::table('chats')->truncate();
+        DB::table('chat_groups')->truncate();
+        DB::table('chat_logs')->truncate();
+
+        $user = User::where('email', 'stefensuhat@gmail.com')->first();
 
         for ($i = 0; $i < 10; $i++) {
             //save chat groups
@@ -64,11 +31,11 @@ class ChatSeeder extends Seeder
             $chatGroup->updated_at = now()->addDays(-$i);
             $chatGroup->save();
 
-            foreach ($data as $item) {
+            foreach ($this->getChatData() as $item) {
                 // save chats
                 $chat = new Chat($item);
                 $chat->chatGroup()->associate($chatGroup);
-                $chat->user()->associate($chatGroup);
+                $chat->user()->associate($user);
                 $chat->content = json_encode($item['content']);
                 $chat->save();
 
@@ -85,5 +52,49 @@ class ChatSeeder extends Seeder
             }
         }
 
+    }
+
+    protected function getChatData()
+    {
+        $data = [
+            [
+                'role' => 'user',
+                'content' => [
+                    [
+                        'type' => 'text',
+                        'text' => fake()->sentence(10, true),
+                    ],
+                ],
+            ],
+            [
+                'role' => 'assistant',
+                'content' => [
+                    [
+                        'type' => 'text',
+                        'text' => fake()->sentence(100, true),
+                    ],
+                ],
+            ],
+            [
+                'role' => 'user',
+                'content' => [
+                    [
+                        'type' => 'text',
+                        'text' => fake()->sentence(10, true),
+                    ],
+                ],
+            ],
+            [
+                'role' => 'assistant',
+                'content' => [
+                    [
+                        'type' => 'text',
+                        'text' => fake()->sentence(100, true),
+                    ],
+                ],
+            ],
+        ];
+
+        return $data;
     }
 }
