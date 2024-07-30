@@ -32,28 +32,46 @@ class DatabaseSeeder extends Seeder
         // $user->email_verified_at = now();
         // $user->save();
 
-        $this->call(ChatSeeder::class);
-        // $settings = [
-        //     [
-        //         'key' => 'aspectRatio',
-        //         'value' => [
-        //             ['key' => 'square', 'name' => 'Square', 'value' => ['width' => 1024, 'height' => 1024]],
-        //             ['key' => 'wide', 'name' => 'Wide', 'value' => ['width' => 1200, 'height' => 675]],
-        //             ['key' => 'portrait', 'name' => 'Portrait', 'value' => ['width' => 675, 'height' => 1200]],
-        //         ],
-        //     ],
-        // ];
-        //
-        // foreach ($settings as $setting) {
-        //     foreach ($setting['value'] as $key => $value) {
-        //
-        //     $getSetting = Setting::where('key', $setting['key'])->first();
-        //
-        //     if (! $getSetting) {
-        //         $setting = new Setting($setting);
-        //         $setting->save();
-        //     }
-        // }
+        // $this->call(ChatSeeder::class);
+        $settings = [
+            [
+                'key' => 'pricePerCredit',
+                'value' => 100,
+            ],
+            [
+                'key' => 'aspectRatio',
+                'value' => [
+                    ['key' => 'square', 'name' => 'Square', 'value' => ['width' => 1024, 'height' => 1024]],
+                    ['key' => 'wide', 'name' => 'Wide', 'value' => ['width' => 1200, 'height' => 675]],
+                    ['key' => 'portrait', 'name' => 'Portrait', 'value' => ['width' => 675, 'height' => 1200]],
+                ],
+            ],
+        ];
+
+        foreach ($settings as $setting) {
+
+            if (is_array($setting['value'])) {
+                foreach ($setting['value'] as $key => $value) {
+
+                    $getSetting = Setting::where('key', $setting['key'])->first();
+
+                    if (! $getSetting) {
+                        $setting = new Setting($setting);
+                        $setting->key = $setting['key'];
+                        $setting->value = json_encode($setting['value']);
+                        $setting->save();
+                    }
+                }
+
+            }
+            $getSetting = Setting::where('key', $setting['key'])->first();
+
+            if (! $getSetting) {
+                $setting = new Setting($setting);
+                $setting->save();
+            }
+
+        }
 
         // $models = [
         //     [

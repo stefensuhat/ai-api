@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\TransactionResource;
 use App\Models\Payment;
-use App\Models\PricingPlan;
+use App\Models\Setting;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -20,7 +20,7 @@ class TransactionController extends Controller
 
     public function __construct()
     {
-        $apiInstance = new InvoiceApi();
+        $apiInstance = new InvoiceApi;
 
         $this->invoice = $apiInstance;
     }
@@ -33,7 +33,7 @@ class TransactionController extends Controller
             Gate::authorize('view', $transaction);
             $resource = new TransactionResource($transaction);
 
-            return response()->json(['error' => true, 'data' => $resource], 400);
+            return response()->json($resource);
 
         } catch (\Throwable $th) {
             return response()->json(['error' => true, 'data' => $th->getMessage()], 400);
@@ -44,7 +44,7 @@ class TransactionController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'pricing_plan_id' => 'required|exists:pricing_plans,id',
+            'credits' => 'required|numeric|min:100',
         ]);
 
         $user = $request->user();
@@ -52,15 +52,15 @@ class TransactionController extends Controller
         if ($validated) {
             DB::beginTransaction();
             try {
-                $plan = PricingPlan::find($request->input('pricing_plan_id'));
+                $getPricePerCredit = Setting::where('key', 'pricePerCredit')->value('value');
+                $price = $request->input('credits') * $getPricePerCredit;
 
-                $transaction = new Transaction();
+                $transaction = new Transaction;
                 $transaction->user()->associate($user);
-                $transaction->pricingPlan()->associate($plan);
                 $transaction->order_id = $this->generateTrxId();
-                $transaction->subtotal = $plan->subtotal;
-                $transaction->discount = $plan->discount;
-                $transaction->grand_total = $plan->grand_total;
+                $transaction->credits = $request->input('credits');
+                $transaction->subtotal = $price;
+                $transaction->grand_total = $price;
                 $transaction->status = 'PENDING';
                 $transaction->save();
 
@@ -68,7 +68,7 @@ class TransactionController extends Controller
                 $redirectQueryString = '?transactionId='.$transaction->order_id;
                 $invoiceRequest = new CreateInvoiceRequest([
                     'external_id' => $transaction->order_id,
-                    'description' => $plan->name,
+                    'description' => 'Credit purchase',
                     'amount' => $transaction->grand_total,
                     'currency' => 'IDR',
                     'reminder_time' => 1,
@@ -79,7 +79,7 @@ class TransactionController extends Controller
                 try {
                     $result = $this->invoice->createInvoice($invoiceRequest);
 
-                    $payment = new Payment();
+                    $payment = new Payment;
                     $payment->transaction()->associate($transaction);
                     $payment->payment_invoice_id = $result->getId();
                     $payment->save();

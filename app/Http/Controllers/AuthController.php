@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Models\UserCredit;
 use App\Models\UserMetaData;
-use App\Models\UserToken;
 use App\Services\Supabase;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Request;
@@ -18,7 +18,7 @@ class AuthController extends Controller
 
     public function __construct()
     {
-        $this->supabase = new Supabase();
+        $this->supabase = new Supabase;
     }
 
     /**
@@ -51,7 +51,7 @@ class AuthController extends Controller
             $meta = $user->metadata;
 
             if (! $meta) {
-                $meta = new UserMetadata();
+                $meta = new UserMetadata;
                 $meta->user()->associate($user);
             }
 
@@ -66,7 +66,7 @@ class AuthController extends Controller
             }
             $meta->save();
 
-            $token = new UserToken();
+            $token = new UserCredit;
             $token->user()->associate($user);
             $token->amount = 2;
             $token->save();

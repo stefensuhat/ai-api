@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('order_id');
             $table->foreignUlid('user_id')->constrained('users');
-            $table->foreignUlid('pricing_plan_id')->constrained('pricing_plans');
             $table->decimal('subtotal', 14);
-            $table->decimal('discount', 14);
+            $table->decimal('discount', 14)->default(0);
+            $table->decimal('tax', 14)->default(0);
             $table->decimal('grand_total', 14);
             $table->string('status');
             $table->timestamps();

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\AddUserPoint;
+use App\Jobs\AddUserCredit;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Xendit\Invoice\InvoiceApi;
@@ -14,7 +14,7 @@ class PaymentCallbackController extends Controller
 
     public function __construct()
     {
-        $apiInstance = new InvoiceApi();
+        $apiInstance = new InvoiceApi;
 
         $this->invoice = $apiInstance;
     }
@@ -37,8 +37,8 @@ class PaymentCallbackController extends Controller
             $transaction->save();
 
             // update point
-            $pricingPlan = $transaction->pricingPlan->value;
-            AddUserPoint::dispatchIf($transaction->status === 'PAID', $transaction->user, $pricingPlan);
+            $credits = $transaction->credits;
+            AddUserCredit::dispatchIf($transaction->status === 'PAID', $transaction->user, $credits);
 
             return response()->json(['success' => true]);
 

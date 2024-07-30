@@ -57,7 +57,7 @@ class User extends Authenticatable
 
     public function token(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
-        return $this->hasOne(UserToken::class, 'user_id', 'id');
+        return $this->hasOne(UserCredit::class, 'user_id', 'id');
     }
 
     public function chatGroups(): \Illuminate\Database\Eloquent\Relations\HasMany

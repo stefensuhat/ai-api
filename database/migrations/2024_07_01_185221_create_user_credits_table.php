@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_tokens', function (Blueprint $table) {
+        Schema::create('user_credits', function (Blueprint $table) {
             $table->id();
             $table->foreignUlid('user_id')->constrained('users')->onDelete('cascade');
             $table->unsignedInteger('amount');
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_tokens');
+        Schema::dropIfExists('user_credits');
     }
 };
