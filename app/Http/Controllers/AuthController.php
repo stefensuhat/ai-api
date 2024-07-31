@@ -6,7 +6,6 @@ use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Models\UserCredit;
 use App\Models\UserMetaData;
-use App\Services\Supabase;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,13 +13,6 @@ use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
-    protected Supabase $supabase;
-
-    public function __construct()
-    {
-        $this->supabase = new Supabase;
-    }
-
     /**
      * @throws ConnectionException
      */
@@ -38,7 +30,6 @@ class AuthController extends Controller
                 return response()->json(['error' => 'Invalid token'], 401);
             }
 
-            // return response()->json(compact('response'));
             // save to user table
             $user = User::where('email', $response->email)->first();
 
@@ -46,6 +37,11 @@ class AuthController extends Controller
                 $user = new User(['email' => $response->email, 'phone' => $response->phone ?? null, 'name' => $response->name]);
                 $user->email_verified_at = now();
                 $user->save();
+
+                $credit = new UserCredit;
+                $credit->user()->associate($user);
+                $credit->amount = 75;
+                $credit->save();
             }
 
             $meta = $user->metadata;
@@ -65,11 +61,6 @@ class AuthController extends Controller
                 $meta->github_avatar = $response->avatar;
             }
             $meta->save();
-
-            $token = new UserCredit;
-            $token->user()->associate($user);
-            $token->amount = 2;
-            $token->save();
 
             $token = $user->createToken($user->id)->plainTextToken;
 
