@@ -9,12 +9,13 @@ class UserCredit extends Model
 {
     use HasFactory;
 
-    public $incrementing = false;
-
-    public $primaryKey = 'user_id';
-
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function logs(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(UserCreditLog::class);
     }
 }

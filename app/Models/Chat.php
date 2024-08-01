@@ -34,4 +34,9 @@ class Chat extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function creditLoggable()
+    {
+        return $this->morphOne(UserCreditLog::class, 'loggable');
+    }
 }

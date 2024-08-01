@@ -57,7 +57,7 @@ class User extends Authenticatable
 
     public function credit(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
-        return $this->hasOne(UserCredit::class, 'user_id', 'id');
+        return $this->hasOne(UserCredit::class);
     }
 
     public function chatGroups(): \Illuminate\Database\Eloquent\Relations\HasMany

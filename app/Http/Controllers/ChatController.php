@@ -7,6 +7,7 @@ use App\Models\Chat;
 use App\Models\ChatGroup;
 use App\Models\ChatLog;
 use App\Models\Setting;
+use App\Models\UserCreditLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -43,9 +44,19 @@ class ChatController extends Controller
         ]);
 
         if ($validated) {
-            DB::beginTransaction();
-
             $user = $request->user();
+
+            $inputTokens = $request->input('assistant.usage.input_tokens');
+            $outputTokens = $request->input('assistant.usage.output_tokens');
+
+            $usdToIdr = Setting::where('key', 'usdToIdr')->value('value');
+            $totalCost = (($inputTokens + $outputTokens) * $usdToIdr) / 1000000;
+
+            if ($totalCost > $user->credit->amount) {
+                return response()->json(['error' => 'Insufficient credit'], 400);
+            }
+
+            DB::beginTransaction();
 
             try {
                 // save group if there is no group
@@ -92,11 +103,15 @@ class ChatController extends Controller
                     $log->save();
 
                     // handle user credit
-                    $usdToIdr = Setting::where('key', 'usdToIdr')->value('value');
-                    $totalCost = ($log->input_tokens + $log->output_tokens) * $usdToIdr;
-
-                    $user->credit = $user->credit - $totalCost;
+                    $userCredit = $user->credit;
+                    $userCredit->amount = $userCredit->amount - $totalCost;
                     $user->save();
+
+                    $creditLog = new UserCreditLog;
+                    $creditLog->userCredit()->associate($userCredit);
+                    $creditLog->loggable()->associate($clone);
+                    $creditLog->amount = $totalCost;
+                    $creditLog->save();
                 }
 
                 DB::commit();
