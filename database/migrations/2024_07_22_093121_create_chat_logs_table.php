@@ -17,8 +17,8 @@ return new class extends Migration
             $table->foreignUlid('user_id');
             $table->string('msg_id');
             $table->string('model');
-            $table->string('stop_reason');
-            $table->string('stop_sequence');
+            $table->string('stop_reason')->nullable();
+            $table->string('stop_sequence')->nullable();
             $table->unsignedInteger('input_tokens');
             $table->unsignedInteger('output_tokens');
             $table->timestamps();

@@ -55,7 +55,7 @@ class User extends Authenticatable
         return $this->hasOne(UserMetaData::class);
     }
 
-    public function token(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function credit(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(UserCredit::class, 'user_id', 'id');
     }
