@@ -39,6 +39,10 @@ class DatabaseSeeder extends Seeder
                 'value' => 100,
             ],
             [
+                'key' => 'usdToIdr',
+                'value' => 16500,
+            ],
+            [
                 'key' => 'aspectRatio',
                 'value' => [
                     ['key' => 'square', 'name' => 'Square', 'value' => ['width' => 1024, 'height' => 1024]],

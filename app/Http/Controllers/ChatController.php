@@ -6,6 +6,7 @@ use App\Http\Resources\ChatGroupResource;
 use App\Models\Chat;
 use App\Models\ChatGroup;
 use App\Models\ChatLog;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -89,6 +90,13 @@ class ChatController extends Controller
                     $log->input_tokens = $request->input('assistant.usage.input_tokens');
                     $log->output_tokens = $request->input('assistant.usage.output_tokens');
                     $log->save();
+
+                    // handle user credit
+                    $usdToIdr = Setting::where('key', 'usdToIdr')->value('value');
+                    $totalCost = ($log->input_tokens + $log->output_tokens) * $usdToIdr;
+
+                    $user->credit = $user->credit - $totalCost;
+                    $user->save();
                 }
 
                 DB::commit();
