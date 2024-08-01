@@ -19,7 +19,7 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'avatar' => $this->metadata->github_avatar ?? $this->metadata->google_picture ?? null,
-            'balance' => $this->token->amount ?? 0,
+            'balance' => $this->credit->amount ?? 0,
         ];
     }
 }
