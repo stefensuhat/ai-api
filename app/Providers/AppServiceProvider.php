@@ -25,6 +25,8 @@ class AppServiceProvider extends ServiceProvider
 
         Relation::enforceMorphMap([
             'chat' => 'App\Models\Chat',
+            'user' => 'App\Models\User',
+            'user_credits' => 'App\Models\UserCredit',
         ]);
     }
 }

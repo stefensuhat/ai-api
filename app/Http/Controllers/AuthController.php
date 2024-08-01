@@ -66,7 +66,7 @@ class AuthController extends Controller
 
             DB::commit();
 
-            $data = ['token' => $token, 'user' => $user->withoutRelations()];
+            $data = ['token' => $token, 'user' => $user];
 
             return response()->json($data);
         } catch (\Exception $e) {
