@@ -32,7 +32,7 @@ class AddUserCredit implements ShouldQueue
      */
     public function handle(): void
     {
-        if (! $this->user->token) {
+        if (! $this->user->credit) {
             $userToken = new UserCredit;
             $userToken->user()->associate($this->user);
             $userToken->amount = $this->credit;
