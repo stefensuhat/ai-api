@@ -105,7 +105,7 @@ class ChatController extends Controller
                     // handle user credit
                     $userCredit = $user->credit;
                     $userCredit->amount = $userCredit->amount - $totalCost;
-                    $user->save();
+                    $userCredit->save();
 
                     $creditLog = new UserCreditLog;
                     $creditLog->userCredit()->associate($userCredit);
