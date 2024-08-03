@@ -31,7 +31,7 @@ class ChatController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'chat_group_id' => 'ulid|exists:chat_groups,id',
+            'chat_group_id' => 'nullable|ulid|exists:chat_groups,id',
             'prompt' => 'required',
             'user.role' => 'required|string',
             'user.content' => 'required',
@@ -50,7 +50,7 @@ class ChatController extends Controller
             $outputTokens = $request->input('assistant.usage.output_tokens');
 
             $usdToIdr = Setting::where('key', 'usdToIdr')->value('value');
-            $totalCost = (($inputTokens + $outputTokens) * $usdToIdr) / 1000000;
+            $totalCost = round((($inputTokens + $outputTokens) * $usdToIdr) / 1000000, 2);
 
             if ($totalCost > $user->credit->amount) {
                 return response()->json(['error' => 'Insufficient credit'], 400);
@@ -104,8 +104,11 @@ class ChatController extends Controller
 
                     // handle user credit
                     $userCredit = $user->credit;
-                    $userCredit->amount = $userCredit->amount - $totalCost;
+
+                    $userCredit->amount = round($userCredit->amount - $totalCost, 2);
                     $userCredit->save();
+
+                    DB::rollBack();
 
                     $creditLog = new UserCreditLog;
                     $creditLog->userCredit()->associate($userCredit);
