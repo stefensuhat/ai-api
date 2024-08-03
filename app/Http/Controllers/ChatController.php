@@ -108,8 +108,6 @@ class ChatController extends Controller
                     $userCredit->amount = round($userCredit->amount - $totalCost, 2);
                     $userCredit->save();
 
-                    DB::rollBack();
-
                     $creditLog = new UserCreditLog;
                     $creditLog->userCredit()->associate($userCredit);
                     $creditLog->loggable()->associate($clone);
