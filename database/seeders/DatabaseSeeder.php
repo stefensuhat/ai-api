@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\AiModel;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\PricingPlan;
+use App\Models\Prompt;
 use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -16,6 +17,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call(AiModelSeeder::class);
         // if (User::count() == 0) {
         //     $user = new User;
         //     $user->name = 'Stefen Suhat';
@@ -33,49 +35,49 @@ class DatabaseSeeder extends Seeder
         // $user->save();
 
         // $this->call(ChatSeeder::class);
-        $settings = [
-            [
-                'key' => 'pricePerCredit',
-                'value' => 100,
-            ],
-            [
-                'key' => 'usdToIdr',
-                'value' => 16500,
-            ],
-            [
-                'key' => 'aspectRatio',
-                'value' => [
-                    ['key' => 'square', 'name' => 'Square', 'value' => ['width' => 1024, 'height' => 1024]],
-                    ['key' => 'wide', 'name' => 'Wide', 'value' => ['width' => 1200, 'height' => 675]],
-                    ['key' => 'portrait', 'name' => 'Portrait', 'value' => ['width' => 675, 'height' => 1200]],
-                ],
-            ],
-        ];
-
-        foreach ($settings as $setting) {
-
-            if (is_array($setting['value'])) {
-                foreach ($setting['value'] as $key => $value) {
-
-                    $getSetting = Setting::where('key', $setting['key'])->first();
-
-                    if (! $getSetting) {
-                        $setting = new Setting($setting);
-                        $setting->key = $setting['key'];
-                        $setting->value = json_encode($setting['value']);
-                        $setting->save();
-                    }
-                }
-
-            }
-            $getSetting = Setting::where('key', $setting['key'])->first();
-
-            if (! $getSetting) {
-                $setting = new Setting($setting);
-                $setting->save();
-            }
-
-        }
+        // $settings = [
+        //     [
+        //         'key' => 'pricePerCredit',
+        //         'value' => 100,
+        //     ],
+        //     [
+        //         'key' => 'usdToIdr',
+        //         'value' => 16500,
+        //     ],
+        //     [
+        //         'key' => 'aspectRatio',
+        //         'value' => [
+        //             ['key' => 'square', 'name' => 'Square', 'value' => ['width' => 1024, 'height' => 1024]],
+        //             ['key' => 'wide', 'name' => 'Wide', 'value' => ['width' => 1200, 'height' => 675]],
+        //             ['key' => 'portrait', 'name' => 'Portrait', 'value' => ['width' => 675, 'height' => 1200]],
+        //         ],
+        //     ],
+        // ];
+        //
+        // foreach ($settings as $setting) {
+        //
+        //     if (is_array($setting['value'])) {
+        //         foreach ($setting['value'] as $key => $value) {
+        //
+        //             $getSetting = Setting::where('key', $setting['key'])->first();
+        //
+        //             if (! $getSetting) {
+        //                 $setting = new Setting($setting);
+        //                 $setting->key = $setting['key'];
+        //                 $setting->value = json_encode($setting['value']);
+        //                 $setting->save();
+        //             }
+        //         }
+        //
+        //     }
+        //     $getSetting = Setting::where('key', $setting['key'])->first();
+        //
+        //     if (! $getSetting) {
+        //         $setting = new Setting($setting);
+        //         $setting->save();
+        //     }
+        //
+        // }
 
         // $models = [
         //     [
@@ -129,6 +131,15 @@ class DatabaseSeeder extends Seeder
         //     $pricePlan->subtotal = $actualPrice;
         //     $pricePlan->grand_total = $discountedPrice;
         //     $pricePlan->is_active = true;
+        //     $pricePlan->save();
+        // }
+
+        // $prompts = [
+        //     ['key' => 'chat', 'name' => 'Chat', 'value' => 'chat'],
+        //     ['key' => 'email', 'name' => 'Email', 'value' => 'email'],
+        // ];
+        // foreach ($prompts as $prompt) {
+        //     $pricePlan = new Prompt($prompt);
         //     $pricePlan->save();
         // }
 

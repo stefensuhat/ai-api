@@ -18,6 +18,7 @@ class ChatGroupResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'last_updated_at' => $this->updated_at,
+            'prompt' => $this->prompt->key,
             'chats' => ChatResource::collection($this->chats),
         ];
     }

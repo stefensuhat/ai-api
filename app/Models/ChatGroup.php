@@ -23,4 +23,9 @@ class ChatGroup extends Model
     {
         return $this->hasMany(Chat::class);
     }
+
+    public function prompt(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Prompt::class);
+    }
 }

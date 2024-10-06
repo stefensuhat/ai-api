@@ -10,5 +10,15 @@ class AiModel extends Model
 {
     use HasFactory, HasUlids;
 
-    protected $fillable = ['name', 'preview_url'];
+    protected $fillable = ['name', 'type', 'version', 'preview_url'];
+
+    public function scopeIsConversation($query)
+    {
+        return $query->where('type', 'conversation');
+    }
+
+    public function scopeVersion($query, $version)
+    {
+        return $query->where('version', $version);
+    }
 }

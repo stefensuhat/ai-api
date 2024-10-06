@@ -6,6 +6,7 @@ use App\Http\Resources\ChatGroupResource;
 use App\Models\Chat;
 use App\Models\ChatGroup;
 use App\Models\ChatLog;
+use App\Models\Prompt;
 use App\Models\Setting;
 use App\Models\UserCreditLog;
 use Illuminate\Http\Request;
@@ -32,7 +33,10 @@ class ChatController extends Controller
     {
         $validated = $request->validate([
             'chat_group_id' => 'nullable|ulid|exists:chat_groups,id',
+            'group_name' => 'nullable|string',
             'prompt' => 'required',
+            'tone' => 'required',
+            'prompt_type' => 'required|exists:prompts,key',
             'user.role' => 'required|string',
             'user.content' => 'required',
             'user.type' => 'required_if:role,assistant|string',
@@ -72,8 +76,10 @@ class ChatController extends Controller
                     $chatGroup->touch();
 
                 } else {
-                    $chatGroup->name = $request->input('prompt');
+                    $promptType = Prompt::where('key', $request->input('prompt_type'))->first();
+                    $chatGroup->name = $request->input('group_name') ?? $request->input('prompt');
                     $chatGroup->user()->associate($user);
+                    $chatGroup->prompt()->associate($promptType);
                     $chatGroup->save();
                 }
 
@@ -84,6 +90,7 @@ class ChatController extends Controller
 
                 $clone = clone $chat;
 
+                $chat->tone = $request->input('tone', 'casual');
                 $chat->role = $request->input('user.role');
                 $chat->content = json_encode($request->input('user.content'));
                 $chat->save();

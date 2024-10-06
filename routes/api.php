@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\AiModelController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChatController;
@@ -31,7 +32,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('transactions/{transaction}', [TransactionController::class, 'show']);
     Route::post('checkout', [TransactionController::class, 'store']);
 
-    Route::apiResource('conversations', ChatGroupController::class);
+    Route::apiResource('conversations', ChatGroupController::class, ['except' => ['store', 'update']]);
+    Route::post('conversations', [ConversationController::class, 'store']);
+    Route::post('conversations/:conversation', [ConversationController::class, 'update']);
     Route::apiResource('chats', ChatController::class);
 });
 
