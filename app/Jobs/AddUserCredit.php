@@ -32,15 +32,13 @@ class AddUserCredit implements ShouldQueue
      */
     public function handle(): void
     {
-        if (! $this->user->credit) {
-            $userToken = new UserCredit;
-            $userToken->user()->associate($this->user);
-            $userToken->amount = $this->credit;
-            $userToken->save();
-        } else {
-            $userToken = UserCredit::where('user_id', $this->user->id)->first();
-            $userToken->amount += $this->credit;
-            $userToken->save();
+        $userCredit = UserCredit::where('user_id', $this->user->id)->first();
+        if (! $userCredit) {
+            $userCredit = new UserCredit;
+            $userCredit->user()->associate($this->user);
         }
+        $userCredit->amount += $this->credit;
+        $userCredit->save();
+
     }
 }
